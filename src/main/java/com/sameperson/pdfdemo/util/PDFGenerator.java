@@ -26,22 +26,12 @@ public class PDFGenerator {
             PDPageContentStream content = new PDPageContentStream(template, templatePage,
                     PDPageContentStream.AppendMode.APPEND, true, true);
 
-            content.beginText();
-            content.setFont(font, 10);
-            content.newLineAtOffset(10 * POINTS_PER_MM, 130f * POINTS_PER_MM);
-            content.showText(barcode + " (Barcode will be here)");
-            content.endText();
-
-            content.beginText();
-            content.setFont(font, 14);
-            content.newLineAtOffset(50 * POINTS_PER_MM, 115.8f * POINTS_PER_MM);
-            content.showText(firstName);
-            content.endText();
-
-            content.beginText();
-            content.newLineAtOffset(50 * POINTS_PER_MM, 106.9f * POINTS_PER_MM);
-            content.showText(lastName);
-            content.endText();
+            //Barcode
+            putText(content, font, 10, 10 * POINTS_PER_MM, 130f * POINTS_PER_MM, barcode + " (Barcode will be here)");
+            //First name
+            putText(content, font, 14, 50 * POINTS_PER_MM, 115.8f * POINTS_PER_MM, firstName);
+            //Last name
+            putText(content, font, 14, 50 * POINTS_PER_MM, 106.9f * POINTS_PER_MM, lastName);
 
             content.close();
 
@@ -63,27 +53,16 @@ public class PDFGenerator {
             document.addPage(page);
             PDPageContentStream content = new PDPageContentStream(document, page);
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 10);
-            content.newLineAtOffset(10 * POINTS_PER_MM, 90 * POINTS_PER_MM);
-            content.showText(barcode + " (Barcode will be here)");
-            content.endText();
-
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 14);
-            content.newLineAtOffset(15 * POINTS_PER_MM, 75 * POINTS_PER_MM);
-            content.showText("First name: " + firstName);
-            content.endText();
-
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 14);
-            content.newLineAtOffset(15 * POINTS_PER_MM, 70 * POINTS_PER_MM);
-            content.showText("Last name: " + lastName);
-            content.endText();
+            //Barcode
+            putText(content, font, 10, 10 * POINTS_PER_MM, 90 * POINTS_PER_MM, barcode + " (Barcode will be here)");
+            //First name
+            putText(content, font, 14, 15 * POINTS_PER_MM, 75 * POINTS_PER_MM, "First name: " + firstName);
+            //Last name
+            putText(content, font, 14, 15 * POINTS_PER_MM, 70 * POINTS_PER_MM, "Last name: " + lastName);
 
             content.close();
 
-            document.save(barcode + ".pdf");
+            document.save("output/" + barcode + ".pdf");
             document.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,6 +71,14 @@ public class PDFGenerator {
 
     public void setFont(PDFont font) {
         this.font = font;
+    }
+
+    private void putText(PDPageContentStream content, PDFont font, int size, float offsetX, float offsetY, String text) throws IOException {
+        content.beginText();
+        content.setFont(font, size);
+        content.newLineAtOffset(offsetX, offsetY);
+        content.showText(text);
+        content.endText();
     }
 
 }

@@ -8,6 +8,7 @@ public class Main {
 
         PDFGenerator generator = new PDFGenerator();
         generator.createFromTemplate("0100100000011", "John", "Smith");
+        generator.create("9999999999999", "From", "Scratch");
 
     }
 }
