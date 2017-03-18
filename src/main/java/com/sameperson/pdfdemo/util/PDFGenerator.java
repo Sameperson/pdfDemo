@@ -21,20 +21,20 @@ public class PDFGenerator {
         font = PDType1Font.HELVETICA;
     }
 
-    public void createFromTemplateWithFields(String barcode, String firstName, String lastName) {
+    public void createFromTemplateWithFields(String barcode, String senderName, String senderPhone, String senderAddress) {
         try {
-            PDDocument template = PDDocument.load(new File("template/demo-template-acro.pdf"));
+            PDDocument template = PDDocument.load(new File("template/post-template.pdf"));
             PDAcroForm acroForm = template.getDocumentCatalog().getAcroForm();
             if (acroForm != null)
             {
-                PDTextField field = (PDTextField) acroForm.getField("barcode");
-                field.setValue(barcode);
+                PDTextField field = (PDTextField) acroForm.getField("senderName");
+                field.setValue(senderName);
 
-                field = (PDTextField) acroForm.getField("firstName");
-                field.setValue(firstName);
+                field = (PDTextField) acroForm.getField("senderPhone");
+                field.setValue(senderPhone);
 
-                field = (PDTextField) acroForm.getField("lastName");
-                field.setValue(lastName);
+                field = (PDTextField) acroForm.getField("senderAddress");
+                field.setValue(senderAddress);
             }
             template.save("output/" + barcode + ".pdf");
             template.close();
