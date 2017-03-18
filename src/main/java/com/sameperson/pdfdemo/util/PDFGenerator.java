@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,29 @@ public class PDFGenerator {
         font = PDType1Font.HELVETICA;
     }
 
-    public void createFromTemplate(String barcode, String firstName, String lastName) {
+    public void createFromTemplateWithFields(String barcode, String firstName, String lastName) {
+        try {
+            PDDocument template = PDDocument.load(new File("template/demo-template-acro.pdf"));
+            PDAcroForm acroForm = template.getDocumentCatalog().getAcroForm();
+            if (acroForm != null)
+            {
+                PDTextField field = (PDTextField) acroForm.getField("barcode");
+                field.setValue(barcode);
+
+                field = (PDTextField) acroForm.getField("firstName");
+                field.setValue(firstName);
+
+                field = (PDTextField) acroForm.getField("lastName");
+                field.setValue(lastName);
+            }
+            template.save("output/" + barcode + ".pdf");
+            template.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createFromTemplateWithCoordinates(String barcode, String firstName, String lastName) {
         try {
             PDDocument template = PDDocument.load(new File("template/demo-template.pdf"));
             PDPage templatePage = template.getPage(0);
